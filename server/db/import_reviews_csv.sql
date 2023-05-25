@@ -1,10 +1,4 @@
 
--- Frank
--- \copy your_table_name FROM 'csv_files/your_file.csv' DELIMITER ',' CSV HEADER;
-
--- pgadmin
-  -- DROP DATABASE IF EXISTS reviews;
-  -- CREATE DATABASE reviews
 
 \copy product (id, name, slogan, description, category, default_price) FROM '/Users/seanwinnik/Desktop/hack_reactor/SDC/OldData/SDC Application Data - Atelier Project (_Clean_ Data Set)/product.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
