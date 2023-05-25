@@ -43,7 +43,7 @@ CREATE TABLE characteristics (
 );
 
 
-CREATE TABLE characteristics_reviews (
+CREATE TABLE characteristic_reviews (
   "id" SERIAL PRIMARY KEY,
   "characteristic_id" INTEGER REFERENCES "characteristics" ("id") NOT NULL,
   "review_id" INTEGER NOT NULL,
