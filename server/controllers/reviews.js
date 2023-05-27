@@ -33,34 +33,34 @@ module.exports = {
         console.log('error in CONTROLLER', err);
       })
   },
-  getMeta: (req, res) => {
-      const productId = req.query.product_id;
-      axios.get(`${ATELIER_API}/reviews/meta`, {
-          params: {
-              product_id: productId,
-            },
-            headers: {
-                authorization: API_TOKEN,
-              },
-            })
-              .then(({ data }) => res.json(data))
-              .catch((err) => {
-                  console.log('ERROR GETTING META DATA', err);
-                  res.status(404).json(err);
-                });
-            },
-
   // getMeta: (req, res) => {
-  //   models.review.getMeta(req, res)
-  //   console.log('CONTROLLER TRYING', res)
-  //     .then((dbRes)=> {
-  //       console.log('CONTROLLER DATATA GET', dbRes, 'DATATA CONTROLLER GET');
-  //       res.send(dbRes.rows);
-  //     })
+  //   const productId = req.query.product_id;
+  //   axios.get(`${ATELIER_API}/reviews/meta`, {
+  //     params: {
+  //       product_id: productId,
+  //     },
+  //     headers: {
+  //       authorization: API_TOKEN,
+  //     },
+  //   })
+  //     .then(({ data }) => res.json(data))
   //     .catch((err) => {
-  //       console.log('error in CONTROLLER', err);
-  //     })
-  // },
+  //         console.log('ERROR GETTING META DATA', err);
+  //         res.status(404).json(err);
+  //       });
+  //   },
+
+  getMeta: (req, res) => {
+    models.review.getMeta(req, res)
+      .then((dbRes)=> {
+        console.log('CONTROLLER DATATA GET', dbRes, 'DATATA CONTROLLER GET');
+        res.send(dbRes.rows);
+      })
+      .catch((err) => {
+        console.log('error in CONTROLLER', err);
+      })
+  },
+
   post: (req, res) => {
     axios.post(`${ATELIER_API}/reviews`, req.body, {
       headers: {

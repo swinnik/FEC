@@ -48,51 +48,12 @@ module.exports = {
 
       product_id = product_id || 2;
       if (!product_id) {
-        throw new Error(`Missing headers. Received product_id: ${product_id}, sort: ${sort}`);
+        throw new Error(`Missing headers. Received product_id: ${product_id}`);
       }
 
       await pool.connect();
       const data = await pool.query(
-        `SELECT
-        r.product_id,
-        json_object_agg(r.rating::text, r.rating_count) AS ratings,
-        json_object_agg(r.recommended::text, r.recommended_count) AS recommended,
-        json_object_agg(c.name, json_build_object('id', c.id, 'value', cr.value_avg)) AS characteristics
-      FROM
-        (
-          SELECT
-            review.id,
-            review.product_id,
-            review.rating,
-            COUNT(*) AS rating_count,
-            review.recommended,
-            COUNT(*) AS recommended_count
-          FROM
-            review
-          WHERE
-            review.product_id = 40451
-          GROUP BY
-            review.id,
-            review.product_id,
-            review.rating,
-            review.recommended
-        ) AS r
-      LEFT JOIN
-        (
-          SELECT
-            characteristic_reviews.review_id,
-            AVG(characteristic_reviews.value) AS value_avg,
-            characteristics.name
-          FROM
-            characteristic_reviews
-            INNER JOIN characteristics ON characteristics.id = characteristic_reviews.characteristic_id
-          GROUP BY
-            characteristic_reviews.review_id,
-            characteristics.name
-        ) AS cr ON cr.review_id = r.id
-      LEFT JOIN product p ON p.id = r.product_id
-      GROUP BY
-        r.product_id;`
+        `SELECT * FROM characteristic_reviews LIMIT 15;`
       );
       return data
     } catch (err) {
