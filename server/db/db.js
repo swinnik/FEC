@@ -18,4 +18,5 @@ pool.connect()
     console.log('UNABLE TO CONNECT', err);
   });
 
-module.exports.pool = pool;
+module.exports = pool;
+

@@ -1,27 +1,39 @@
 const axios = require('axios');
+const models = require('../models');
 
 const { ATELIER_API, API_TOKEN } = process.env;
 
 module.exports = {
-  get(req, res) {
-    axios.get(`${ATELIER_API}/reviews`, {
-      params: {
-        page: req.query.page,
-        count: req.query.count,
-        sort: req.query.sort,
-        product_id: req.query.product_id,
-      },
-      headers: {
-        authorization: API_TOKEN,
-      },
-    })
-      .then(({ data }) => res.json(data.results))
+  // get: (req, res) => {
+  //   axios.get(`${ATELIER_API}/reviews`, {
+  //     params: {
+  //       page: req.query.page,
+  //       count: req.query.count,
+  //       sort: req.query.sort,
+  //       product_id: req.query.product_id,
+  //     },
+  //     headers: {
+  //       authorization: API_TOKEN,
+  //     },
+  //   })
+  //     .then(({ data }) => res.json(data.results))
+  //     .catch((err) => {
+  //       console.log('ERROR GETTING REVIEWS', err);
+  //       res.status(404).json(err);
+  //     });
+  // },
+
+  get: (req, res) => {
+    models.review.getAllReviews(req, res)
+      .then((res)=> {
+        console.log(res);
+        res.JSON(res.data);
+      })
       .catch((err) => {
-        console.log('ERROR GETTING REVIEWS', err);
-        res.status(404).json(err);
-      });
+        console.log('error in controllers', err);
+      })
   },
-  getMeta(req, res) {
+  getMeta: (req, res) => {
     const productId = req.query.product_id;
     axios.get(`${ATELIER_API}/reviews/meta`, {
       params: {
@@ -37,7 +49,7 @@ module.exports = {
         res.status(404).json(err);
       });
   },
-  post(req, res) {
+  post: (req, res)  => {
     axios.post(`${ATELIER_API}/reviews`, req.body, {
       headers: {
         authorization: API_TOKEN,
@@ -49,7 +61,7 @@ module.exports = {
         res.sendStatus(400);
       });
   },
-  putHelpful(req, res) {
+  putHelpful:  (req, res) => {
     axios.put(`${ATELIER_API}/reviews/${req.params.review_id}/helpful`, {}, {
       headers: {
         authorization: API_TOKEN,
@@ -61,7 +73,7 @@ module.exports = {
         res.sendStatus(400);
       });
   },
-  putReport(req, res) {
+  putReport: (req, res) => {
     axios.put(`${ATELIER_API}/reviews/${req.params.review_id}/report`, {}, {
       headers: {
         authorization: API_TOKEN,
