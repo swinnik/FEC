@@ -4,7 +4,7 @@ module.exports = {
   getAllReviews: async (req, res) => {
     try {
       let { page, count, sort, product_id } = req.query;
-      console.log(req.query, 'QUERY PARAMS');
+      // console.log(req.query, 'QUERY PARAMS');
       switch (sort) {
         case 'newest':
           sort = 'date DESC';
@@ -44,18 +44,47 @@ module.exports = {
   getMeta: async (req, res) => {
     try {
       let { product_id } = req.query;
-      console.log(req.query, 'QUERY PARAMS');
-
-      product_id = product_id || 2;
+      console.log(req.query, 'META QUERY PARAMS');
+      product_id = product_id;
       if (!product_id) {
         throw new Error(`Missing headers. Received product_id: ${product_id}`);
       }
-
       await pool.connect();
-      const data = await pool.query(
-        `SELECT * FROM characteristic_reviews LIMIT 15;`
-      );
-      return data
+      // const data_product_id = await pool.query(
+      //   `SELECT id AS product_id
+      //   FROM product
+      //   WHERE product_id = ${product_id};`
+      // );
+      const data_rating = await pool.query(
+        `SELECT rating, COUNT(*) AS count
+        FROM review
+        WHERE product_id = ${product_id}
+        GROUP BY rating;`
+      )
+      const data_recommend = await pool.query(
+        `SELECT recommended, COUNT(*) AS count
+        FROM review
+        WHERE product_id = ${product_id}
+        GROUP BY recommended`
+      )
+      const data_characteritics =  await pool.query(
+        `SELECT c.name, c.id, AVG(cr.value) AS average_value
+        FROM characteristics c
+        JOIN characteristic_reviews cr ON c.id = cr.characteristic_id
+        WHERE c.product_id = ${product_id}
+        GROUP BY c.name, c.id;`
+      )
+      const collatedData = {
+        product_id: product_id.rows,
+        ratings: data_rating.rows,
+        recommended: data_recommend.rows,
+        characteristics: data_characteritics.rows,
+      }
+      console.log("COLLATED COLLATED START", collatedData, "COLLATED  COLLATED  END")
+
+
+
+      return collatedData
     } catch (err) {
       console.log(err);
       res.status(500).send('***ERROR RETRIEVING REVIEWS***');

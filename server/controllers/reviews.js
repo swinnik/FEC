@@ -26,11 +26,10 @@ module.exports = {
   get: (req, res) => {
     models.review.getAllReviews(req, res)
       .then((dbRes)=> {
-        console.log('CONTROLLER DATATA GET', dbRes, 'DATATA CONTROLLER GET');
         res.send(dbRes.rows);
       })
       .catch((err) => {
-        console.log('error in CONTROLLER', err);
+        console.log('error in CONTROLLER GETALL', err);
       })
   },
   // getMeta: (req, res) => {
@@ -43,21 +42,48 @@ module.exports = {
   //       authorization: API_TOKEN,
   //     },
   //   })
-  //     .then(({ data }) => res.json(data))
+  //     .then(({ data }) => {
+  //       console.log('OLDSCHOOL  METADATA', data, 'OLDSCHOOL METADATA')
+  //       res.json(data)
+  //     })
   //     .catch((err) => {
   //         console.log('ERROR GETTING META DATA', err);
   //         res.status(404).json(err);
   //       });
   //   },
 
+    //METADATA FROM ORIGINAL API
+    // {
+    //   product_id: '40346',
+    //   ratings: { '1': '24', '2': '54', '3': '53', '4': '41', '5': '91' },
+    //   recommended: { false: '70', true: '193' },
+    //   characteristics: {
+    //     Fit: { id: 135224, value: '2.8415841584158416' },
+    //     Length: { id: 135225, value: '3.1176470588235294' },
+    //     Comfort: { id: 135226, value: '3.0000000000000000' },
+    //     Quality: { id: 135227, value: '3.3800000000000000' }
+    //   }
+
   getMeta: (req, res) => {
     models.review.getMeta(req, res)
       .then((dbRes)=> {
-        console.log('CONTROLLER DATATA GET', dbRes, 'DATATA CONTROLLER GET');
-        res.send(dbRes.rows);
+        console.log('start metadata res controller:', res, 'METADATA res controller end')
+        const dada = {
+          product_id: '40346',
+          ratings: { '1': '24', '2': '54', '3': '53', '4': '41', '5': '91' },
+          recommended: { false: '70', true: '193' },
+          characteristics: {
+            Fit: { id: 135224, value: '2.8415841584158416' },
+            Length: { id: 135225, value: '3.1176470588235294' },
+            Comfort: { id: 135226, value: '3.0000000000000000' },
+            Quality: { id: 135227, value: '3.3800000000000000' }
+          }}
+        // console.log('CONTROLLER DATATA GET META start:', dbRes.rows, 'DATATA CONTROLLER GET META end');
+        // res.send(dbRes.rows);
+        res.send(dada)
       })
       .catch((err) => {
-        console.log('error in CONTROLLER', err);
+        console.log('error in CONTROLLER GET META', err);
       })
   },
 
