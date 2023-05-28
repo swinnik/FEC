@@ -25,7 +25,8 @@ module.exports = {
 
   get: (req, res) => {
     models.review.getAllReviews(req, res)
-      .then((dbRes)=> {
+    .then((dbRes)=> {
+        console.log("SDFLSDF", dbRes, 'asdfasdfl;askdjf;alskdf')
         res.send(dbRes.rows);
       })
       .catch((err) => {

@@ -2,6 +2,7 @@ const pool = require('../db/db');
 
 module.exports = {
   getAllReviews: async (req, res) => {
+    let data = []
     try {
       let { page, count, sort, product_id } = req.query;
       // console.log(req.query, 'QUERY PARAMS');
@@ -27,7 +28,7 @@ module.exports = {
       }
 
       await pool.connect();
-      const data = await pool.query(
+      data = await pool.query(
         `SELECT review.id AS review_id, array_agg(json_build_object('id', review_photos,  'url', review_photos.url))
         as photos, rating,  summary, recommended, response,  body,
         TO_TIMESTAMP(date/1000) as date, reviewer_name, helpfulness FROM review FULL OUTER JOIN
