@@ -49,30 +49,18 @@ module.exports = {
       if (!product_id) {
         throw new Error(`Missing headers. Received product_id: ${product_id}`);
       }
-      await pool.connect();
-      // const data_product_id = await pool.query(
-      //   `SELECT id AS product_id
-      //   FROM product
-      //   WHERE product_id = ${product_id};`
-      // );
       const data_rating = await pool.query(
-        `SELECT rating, COUNT(*) AS count
-        FROM review
-        WHERE product_id = ${product_id}
-        GROUP BY rating;`
+        `SELECT rating, COUNT(*) AS count FROM review
+         WHERE product_id = ${product_id} GROUP BY rating;`
       )
       const data_recommend = await pool.query(
-        `SELECT recommended, COUNT(*) AS count
-        FROM review
-        WHERE product_id = ${product_id}
-        GROUP BY recommended`
+        `SELECT recommended, COUNT(*) AS count FROM review
+         WHERE roduct_idp = ${product_id} GROUP BY recommended`
       )
       const data_characteritics =  await pool.query(
-        `SELECT c.name, c.id, AVG(cr.value) AS average_value
-        FROM characteristics c
+        `SELECT c.name, c.id, AVG(cr.value) AS average_value FROM characteristics c
         JOIN characteristic_reviews cr ON c.id = cr.characteristic_id
-        WHERE c.product_id = ${product_id}
-        GROUP BY c.name, c.id;`
+        WHERE c.product_id = ${product_id} GROUP BY c.name, c.id;`
       )
       const collatedData = {
         product_id: product_id.rows,
@@ -81,10 +69,7 @@ module.exports = {
         characteristics: data_characteritics.rows,
       }
       console.log("COLLATED COLLATED START", collatedData, "COLLATED  COLLATED  END")
-
-
-
-      return collatedData
+      return collatedData;
     } catch (err) {
       console.log(err);
       res.status(500).send('***ERROR RETRIEVING REVIEWS***');
