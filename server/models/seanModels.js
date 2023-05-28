@@ -49,26 +49,38 @@ module.exports = {
       if (!product_id) {
         throw new Error(`Missing headers. Received product_id: ${product_id}`);
       }
-      const data_rating = await pool.query(
+      let data_rating = await pool.query(
         `SELECT rating, COUNT(*) AS count FROM review
-         WHERE product_id = ${product_id} GROUP BY rating;`
-      )
+         WHERE product_id = ${product_id} GROUP BY rating;`,
+      );
+      let dataRating = {}
+      data_rating.rows.forEach(e=>{
+        dataRating[e.rating.toString()] = e.count;
+      });
       const data_recommend = await pool.query(
         `SELECT recommended, COUNT(*) AS count FROM review
-         WHERE roduct_idp = ${product_id} GROUP BY recommended`
-      )
+         WHERE product_id = ${product_id} GROUP BY recommended`,
+      );
+      let dataRecommend = {}
+      data_recommend.rows.forEach(e=>{
+        dataRecommend[e.recommended] = e.count;
+      })
       const data_characteritics =  await pool.query(
         `SELECT c.name, c.id, AVG(cr.value) AS average_value FROM characteristics c
         JOIN characteristic_reviews cr ON c.id = cr.characteristic_id
-        WHERE c.product_id = ${product_id} GROUP BY c.name, c.id;`
-      )
+        WHERE c.product_id = ${product_id} GROUP BY c.name, c.id;`,
+      );
+      let dataCharacteristics = {};
+      data_characteritics.rows.forEach(e=>{
+        dataCharacteristics[e.name] = {id: e.id, value: e.average_value}
+      })
       const collatedData = {
-        product_id: product_id.rows,
-        ratings: data_rating.rows,
-        recommended: data_recommend.rows,
-        characteristics: data_characteritics.rows,
-      }
-      console.log("COLLATED COLLATED START", collatedData, "COLLATED  COLLATED  END")
+        product_id: product_id,
+        ratings: dataRating,
+        recommended: dataRecommend,
+        characteristics: dataCharacteristics,
+      };
+      // console.log("COLLATED COLLATED START", collatedData, "COLLATED  COLLATED  END")
       return collatedData;
     } catch (err) {
       console.log(err);
