@@ -23,15 +23,19 @@ export default function RatingsAndReviews({ product, metaData }) {
     if (product) {
       axios.get('/reviews', {
         params: {
-          count: 1000,
+          count: 5,
           product_id: product.id,
           sort,
         },
       })
-        .then(({ data }) => setReviewsCache(data))
+        .then((res) => {
+          setReviewsCache(res.data);
+        })
         .catch((err) => console.error('ERROR GETTING REVIEWS', err));
-    }
-  }, [product, sort]);
+      }
+    }, [product, sort]);
+
+    // console.log('RETURNED DATA:', reviewsCache)
 
   useEffect(() => {
     const filtered = ratingsFilter.length
