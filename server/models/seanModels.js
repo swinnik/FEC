@@ -52,7 +52,7 @@ module.exports = {
       if (!product_id) {
         throw new Error(`Missing headers. Received product_id: ${product_id}`);
       }
-      console.log(req.query, 'META QUERY PARAMS');
+      // console.log(req.query, 'META QUERY PARAMS');
       let data_rating = await pool.query(
         `SELECT rating, COUNT(*) AS count FROM review
         WHERE product_id = ${product_id} GROUP BY rating;`,
@@ -96,11 +96,11 @@ module.exports = {
   putReport: async (req, res) => {
     try {
       const {review_id} = req.params;
-      console.log(req, "PUT REPORT PUT REPORT PUT REPORT ")
+      // console.log(req, "PUT REPORT PUT REPORT PUT REPORT ")
       if (!review_id) {
         throw new Error(`Missing headers. Received review_id: ${review_id}`);
       }
-      console.log(review_id, 'META QUERY PARAMS');
+      // console.log(review_id, 'META QUERY PARAMS');
       let update_report = await pool.query(
         `UPDATE review
         SET reported = true
@@ -111,6 +111,28 @@ module.exports = {
       )
       res.status(201).send('Review Has Been Reported by User')
       return reported.rows
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('***ERROR RETRIEVING REVIEWS***');
+    }
+  },
+  putHelpful: async (req, res) => {
+    try {
+      const {review_id} = req.params;
+      if (!review_id) {
+        throw new Error(`Missing headers. Received review_id: ${review_id}`);
+      }
+      console.log(review_id, 'HelpfulID QUERY PARAMS');
+      let update_report = await pool.query(
+        `UPDATE review
+        SET helpfulness = helpfulness + 1
+        WHERE id = ${review_id}`,
+        );
+        let helpfulness = await pool.query(
+        `SELECT helpfulness FROM review WHERE id  = ${review_id}`
+      )
+      res.status(201).send('Review Has Been Reported by User')
+      return helpfulness.rows
     } catch (err) {
       console.log(err);
       res.status(500).send('***ERROR RETRIEVING REVIEWS***');
