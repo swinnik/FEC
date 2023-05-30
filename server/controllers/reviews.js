@@ -88,16 +88,26 @@ module.exports = {
         res.sendStatus(400);
       });
   },
+  // putHelpful: (req, res) => {
+  //   axios.put(`${ATELIER_API}/reviews/${req.params.review_id}/helpful`, {}, {
+  //     headers: {
+  //       authorization: API_TOKEN,
+  //     },
+  //   })
+  //     .then(() => res.sendStatus(204))
+  //     .catch((err) => {
+  //       console.log('ERROR UPDATING HELPFUL', err);
+  //       res.sendStatus(400);
+  //     });
+  // },
   putHelpful: (req, res) => {
-    axios.put(`${ATELIER_API}/reviews/${req.params.review_id}/helpful`, {}, {
-      headers: {
-        authorization: API_TOKEN,
-      },
-    })
-      .then(() => res.sendStatus(204))
+    console.log('putHelpfulness REQ START', req, 'putHelpfulness REQ END');
+    models.review.putHelpful(req, res)
+      .then((dbRes)=> {
+        console.log('PUTREPORT START controller dbRES reported  ', dbRes, 'PUT REPORT dbRes controller end')
+      })
       .catch((err) => {
-        console.log('ERROR UPDATING HELPFUL', err);
-        res.sendStatus(400);
+        console.log('error in CONTROLLER GET META', err);
       });
   },
   // putReport: (req, res) => {
