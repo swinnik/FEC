@@ -9,3 +9,4 @@
 \copy characteristics (id, product_id, name) FROM '/Users/seanwinnik/Desktop/hack_reactor/SDC/OldData/SDC Application Data - Atelier Project (_Clean_ Data Set)/characteristics.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
 \copy characteristic_reviews (id, characteristic_id, review_id, value) FROM '/Users/seanwinnik/Desktop/hack_reactor/SDC/OldData/SDC Application Data - Atelier Project (_Clean_ Data Set)/characteristic_reviews.csv' DELIMITER ',' CSV HEADER QUOTE '"'
+

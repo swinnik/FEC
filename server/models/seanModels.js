@@ -5,7 +5,7 @@ module.exports = {
     let data = []
     try {
       let { page, count, sort, product_id } = req.query;
-      // console.log(req.query, 'QUERY PARAMS');
+      console.log(req.query, 'QUERY PARAMS GET ALL REVIEWS END');
       switch (sort) {
         case 'newest':
           sort = 'date DESC';
@@ -32,14 +32,13 @@ module.exports = {
         `SELECT review.id AS review_id, array_agg(json_build_object('id', review_photos,  'url', review_photos.url))
         as photos, rating,  summary, recommended, reported, response,  body,
         TO_TIMESTAMP(date/1000) as date, reviewer_name, helpfulness
-        FROM review FULL OUTER JOIN review_photos
-        ON review_photos.review_id = review.id
-        WHERE review.product_id= $1 AND review.
-        reported = false GROUP BY review.id ORDER BY ${sort} OFFSET ${(page - 1) * count} LIMIT ${count};`,
-        [product_id]
+        FROM review
+        INNER JOIN review_photos ON review_photos.review_id = review.id
+        WHERE review.product_id= ${product_id} AND review.reported = false
+        GROUP BY review.id ORDER BY ${sort} OFFSET ${(page - 1) * count} LIMIT ${count};`,
       );
       console.log('MODELGET REVIEWS start ', data.rows, ' MODEL GET REVIEWS end')
-      return data
+      return data;
     } catch (err) {
       console.log(err);
       res.status(500).send('***ERROR RETRIEVING REVIEWS***');
@@ -139,6 +138,4 @@ module.exports = {
     }
   },
 
-
 };
-
